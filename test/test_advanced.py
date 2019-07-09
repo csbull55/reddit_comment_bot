@@ -25,26 +25,29 @@ heads = (
 df = pd.DataFrame(columns=heads)
 
 # run for x amount of time
-t_end = time.time() + 30
+t_end = time.time() + 10
 
 print(time.time())
 print(t_end)
 # for each comment in the stream, assigns attributes to variables for the df
-while time.time() < t_end:
-    for comment in reddit.subreddit('politics').stream.comments():
-        auth = comment.author
-        body = comment.body
-        id = comment.id
-        parent = comment.parent_id
-        time_utc = comment.created_utc
 
-        # appends df with new comment
-        df = df.append({
-            'author': auth,
-            'body': body,
-            'id': id,
-            'parent': parent,
-            'time_utc': time_utc,
-        },
-            ignore_index=True)
+for comment in reddit.subreddit('politics').stream.comments():
+    auth = comment.author
+    body = comment.body
+    id = comment.id
+    parent = comment.parent_id
+    time_utc = comment.created_utc
+
+    # appends df with new comment
+    df = df.append({
+        'author': auth,
+        'body': body,
+        'id': id,
+        'parent': parent,
+        'time_utc': time_utc,
+    },
+        ignore_index=True)
+
+    if len(df) > 110:
         print(df.tail())
+        break
