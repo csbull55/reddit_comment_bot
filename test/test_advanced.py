@@ -6,6 +6,7 @@ collects body, user, x tree, and time
 for user, it assigns a unique identifier and strips the username
 """
 
+import csv
 import time
 import pandas as pd
 import praw
@@ -38,16 +39,26 @@ for comment in reddit.subreddit('politics').stream.comments():
     parent = comment.parent_id
     time_utc = comment.created_utc
 
-    # appends df with new comment
-    df = df.append({
-        'author': auth,
-        'body': body,
-        'id': id,
-        'parent': parent,
-        'time_utc': time_utc,
-    },
-        ignore_index=True)
+    csv_row = [auth, body, id, parent, time_utc]
 
-    if len(df) > 110:
+    with open (r'test_comment_data.csv', 'a') as f:
+        writer = csv.writer(f)
+        writer.writerow(csv_row)
+
+    # # appends df
+    # with new comment
+    # df = df.append({
+    #     'author': auth,
+    #     'body': body,
+    #     'id': id,
+    #     'parent': parent,
+    #     'time_utc': time_utc,
+    # },
+    #     ignore_index=True)
+
+
+
+    # for testing, allows to pull data and stop
+    if len(df) > 150:
         print(df.tail())
         break
